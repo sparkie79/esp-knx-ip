@@ -185,3 +185,18 @@ void ESPKNXIP::send_4byte_float(address_t const &receiver, knx_command_type_t ct
 	uint8_t buf[] = {0x00, ((uint8_t *)&val)[3], ((uint8_t *)&val)[2], ((uint8_t *)&val)[1], ((uint8_t *)&val)[0]};
 	send(receiver, ct, 5, buf);
 }
+
+void ESPKNXIP::send_14byte_string(address_t const &receiver, knx_command_type_t ct, const char *val)
+{
+	// DPT16 strings are always 14 bytes long, however the data array is one larger due to the telegram structure.
+	// The first byte needs to be zero, string start after that.
+	uint8_t buf[15] = {0x00};
+	int len = strlen(val);
+	if (len > 14)
+	{
+		len = 14;
+	}
+	memcpy(buf+1, val, len);
+	send(receiver, ct, 15, buf);
+}
+

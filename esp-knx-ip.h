@@ -30,6 +30,7 @@
 #define DISABLE_EEPROM_BUTTONS    0 // [Default 0] Set to 1 to disable the EEPROM buttons in the web ui.
 #define DISABLE_REBOOT_BUTTON     0 // [Default 0] Set to 1 to disable the reboot button in the web ui.
 #define DISABLE_RESTORE_BUTTON    0 // [Default 0] Set to 1 to disable the "restore defaults" button in the web ui.
+#define DISABLE_SWUPDATE_BUTTON   0 // [Default 0] Set to 1 to disable the "SW Update" button in the web ui.
 
 // These values normally don't need adjustment
 #ifndef MULTICAST_PORT
@@ -41,7 +42,7 @@
 #define SEND_CHECKSUM             0
 
 // Uncomment to enable printing out debug messages.
-#define ESP_KNX_DEBUG
+// #define ESP_KNX_DEBUG
 /**
  * END CONFIG
  */
@@ -87,6 +88,7 @@
 #define __FEEDBACK_PATH   ROOT_PREFIX"/feedback"
 #define __RESTORE_PATH    ROOT_PREFIX"/restore"
 #define __REBOOT_PATH     ROOT_PREFIX"/reboot"
+#define __SWUPDATE_PATH   ROOT_PREFIX"/swupdate"
 
 /**
  * Different service types, we are mainly interested in KNX_ST_ROUTING_INDICATION
@@ -375,6 +377,8 @@ class ESPKNXIP {
     #else
         void start(ESP8266WebServer *srv);
     #endif
+    // title for web page
+    void set_title(String t) { title = t; }
     void loop();
 
     void save_to_eeprom();
@@ -513,11 +517,14 @@ class ESPKNXIP {
 #endif
     void __handle_config();
     void __handle_feedback();
-#if !DISABLE_RESTORE_BUTTONS
+#if !DISABLE_RESTORE_BUTTON
     void __handle_restore();
 #endif
-#if !DISABLE_REBOOT_BUTTONS
+#if !DISABLE_REBOOT_BUTTON
     void __handle_reboot();
+#endif
+#if !DISABLE_SWUPDATE_BUTTON
+    void __handle_sw_update();
 #endif
 
     void __config_set_flags(config_id_t id, config_flags_t flags);
@@ -536,6 +543,7 @@ class ESPKNXIP {
     #else
         ESP8266WebServer *server;
     #endif
+    String title;
 
     address_t physaddr;
     WiFiUDP udp;

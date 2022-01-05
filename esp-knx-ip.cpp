@@ -91,6 +91,11 @@ void ESPKNXIP::__start()
       __handle_reboot();
     });
 #endif
+#if !DISABLE_SWUPDATE_BUTTON
+    server->on(__SWUPDATE_PATH, [this](){
+      __handle_sw_update();
+    });
+#endif
     server->begin();
   }
 

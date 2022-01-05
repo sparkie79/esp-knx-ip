@@ -13,115 +13,13 @@ void ESPKNXIP::__handle_root()
   m += F("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous'>");
   m += F("<style>.input-group-insert > .input-group-text { border-radius: 0; }</style>");
 #endif
-  m += F("</head><body><div class='container-fluid'>");
-  m += F("<h2>ESP KNX</h2>");
+  m += F("<hr></head><body><div class='container-fluid'>");
+  m += F("<h2>");
+  m += title;
+  m += F("</h2>");
 
-  // Feedback
-
-  if (registered_feedbacks > 0)
-  {
-    m += F("<h4>Feedback</h4>");
-    for (feedback_id_t i = 0; i < registered_feedbacks; ++i)
-    {
-      if (feedbacks[i].cond && !feedbacks[i].cond())
-      {
-        continue;
-      }
-      m += F("<form action='" __FEEDBACK_PATH "' method='POST'>");
-      m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
-      m += F("<div class='input-group-prepend'><span class='input-group-text'>");
-      m += feedbacks[i].name;
-      m += F("</span></div>");
-      switch (feedbacks[i].type)
-      {
-        case FEEDBACK_TYPE_INT:
-          m += F("<span class='input-group-text'>");
-          m += String(*(int32_t *)feedbacks[i].data);
-          m += F("</span>");
-          break;
-        case FEEDBACK_TYPE_FLOAT:
-          m += F("<span class='input-group-text'>");
-          m += String(*(float *)feedbacks[i].data, feedbacks[i].options.float_options.precision);
-          m += F("</span>");
-          break;
-        case FEEDBACK_TYPE_BOOL:
-          m += F("<span class='input-group-text'>");
-          m += (*(bool *)feedbacks[i].data) ? F("True") : F("False");
-          m += F("</span>");
-          break;
-        case FEEDBACK_TYPE_ACTION:
-          m += F("<input class='form-control' type='hidden' name='id' value='");
-          m += i;
-          m += F("' /><div class='input-group-append'><button type='submit' class='btn btn-primary'>Do this</button></div>");
-          break;
-      }
-      m += F("</div></div></div>");
-      m += F("</form>");
-    }
-  }
-
-  if (registered_callbacks > 0)
-    m += F("<h4>Callbacks</h4>");
-
-  if (registered_callback_assignments > 0)
-  {
-    for (uint8_t i = 0; i < registered_callback_assignments; ++i)
-    {
-      if (callbacks[callback_assignments[i].callback_id].cond && !callbacks[callback_assignments[i].callback_id].cond())
-      {
-        continue;
-      }
-      address_t &addr = callback_assignments[i].address;
-      m += F("<form action='" __DELETE_PATH "' method='POST'>");
-      m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
-      m += F("<div class='input-group-prepend'><span class='input-group-text'>");
-      m += addr.ga.area;
-      m += F("/");
-      m += addr.ga.line;
-      m += F("/");
-      m += addr.ga.member;
-      m += F("</span>");
-      m += F("<span class='input-group-text'>");
-      m += callbacks[callback_assignments[i].callback_id].name;
-      m += F("</span></div>");
-      m += F("<input class='form-control' type='hidden' name='id' value='");
-      m += i;
-      m += F("' /><div class='input-group-append'><button type='submit' class='btn btn-danger'>Delete</button></div>");
-      m += F("</div></div></div>");
-      m += F("</form>");
-    }
-  }
-
-  if (registered_callbacks > 0)
-  {
-    m += F("<form action='" __REGISTER_PATH "' method='POST'>");
-    m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
-    m += F("<input class='form-control' type='number' name='area' min='0' max='31'/>");
-    m += F("<div class='input-group-insert'><span class='input-group-text'>/</span></div>");
-    m += F("<input class='form-control' type='number' name='line' min='0' max='7'/>");
-    m += F("<div class='input-group-insert'><span class='input-group-text'>/</span></div>");
-    m += F("<input class='form-control' type='number' name='member' min='0' max='255'/>");
-    m += F("<div class='input-group-insert'><span class='input-group-text'>-&gt;</span></div>");
-    m += F("<select class='form-control' name='cb'>");
-    for (callback_id_t i = 0; i < registered_callbacks; ++i)
-    {
-      if (callbacks[i].cond && !callbacks[i].cond())
-      {
-        continue;
-      }
-      m += F("<option value=\"");
-      m += i;
-      m += F("\">");
-      m += callbacks[i].name;
-      m += F("</option>");
-    }
-    m += F("</select>");
-    m += F("<div class='input-group-append'><button type='submit' class='btn btn-primary'>Set</button></div>");
-    m += F("</div></div></div>");
-    m += F("</form>");
-  }
-
-  m += F("<h4>Configuration</h4>");
+  // Configuration
+  m += F("<hr><h4>Configuration</h4>");
 
   // Physical address
   m += F("<form action='" __PHYS_PATH "' method='POST'>");
@@ -226,6 +124,113 @@ void ESPKNXIP::__handle_root()
     }
   }
 
+
+  // Feedback
+
+  if (registered_feedbacks > 0)
+  {
+    m += F("<h4>Feedback</h4>");
+    for (feedback_id_t i = 0; i < registered_feedbacks; ++i)
+    {
+      if (feedbacks[i].cond && !feedbacks[i].cond())
+      {
+        continue;
+      }
+      m += F("<form action='" __FEEDBACK_PATH "' method='POST'>");
+      m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
+      m += F("<div class='input-group-prepend'><span class='input-group-text'>");
+      m += feedbacks[i].name;
+      m += F("</span></div>");
+      switch (feedbacks[i].type)
+      {
+        case FEEDBACK_TYPE_INT:
+          m += F("<span class='input-group-text'>");
+          m += String(*(int32_t *)feedbacks[i].data);
+          m += F("</span>");
+          break;
+        case FEEDBACK_TYPE_FLOAT:
+          m += F("<span class='input-group-text'>");
+          m += String(*(float *)feedbacks[i].data, feedbacks[i].options.float_options.precision);
+          m += F("</span>");
+          break;
+        case FEEDBACK_TYPE_BOOL:
+          m += F("<span class='input-group-text'>");
+          m += (*(bool *)feedbacks[i].data) ? F("True") : F("False");
+          m += F("</span>");
+          break;
+        case FEEDBACK_TYPE_ACTION:
+          m += F("<input class='form-control' type='hidden' name='id' value='");
+          m += i;
+          m += F("' /><div class='input-group-append'><button type='submit' class='btn btn-primary'>Do this</button></div>");
+          break;
+      }
+      m += F("</div></div></div>");
+      m += F("</form>");
+    }
+  }
+
+  if (registered_callbacks > 0)
+    m += F("<hr><h4>KNX call-backs</h4>");
+
+  if (registered_callback_assignments > 0)
+  {
+    for (uint8_t i = 0; i < registered_callback_assignments; ++i)
+    {
+      if (callbacks[callback_assignments[i].callback_id].cond && !callbacks[callback_assignments[i].callback_id].cond())
+      {
+        continue;
+      }
+      address_t &addr = callback_assignments[i].address;
+      m += F("<form action='" __DELETE_PATH "' method='POST'>");
+      m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
+      m += F("<div class='input-group-prepend'><span class='input-group-text'>");
+      m += addr.ga.area;
+      m += F("/");
+      m += addr.ga.line;
+      m += F("/");
+      m += addr.ga.member;
+      m += F("</span>");
+      m += F("<span class='input-group-text'>");
+      m += callbacks[callback_assignments[i].callback_id].name;
+      m += F("</span></div>");
+      m += F("<input class='form-control' type='hidden' name='id' value='");
+      m += i;
+      m += F("' /><div class='input-group-append'><button type='submit' class='btn btn-danger'>Delete</button></div>");
+      m += F("</div></div></div>");
+      m += F("</form>");
+    }
+  }
+
+  if (registered_callbacks > 0)
+  {
+    m += F("<form action='" __REGISTER_PATH "' method='POST'>");
+    m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
+    m += F("<input class='form-control' type='number' name='area' min='0' max='31'/>");
+    m += F("<div class='input-group-insert'><span class='input-group-text'>/</span></div>");
+    m += F("<input class='form-control' type='number' name='line' min='0' max='7'/>");
+    m += F("<div class='input-group-insert'><span class='input-group-text'>/</span></div>");
+    m += F("<input class='form-control' type='number' name='member' min='0' max='255'/>");
+    m += F("<div class='input-group-insert'><span class='input-group-text'>-&gt;</span></div>");
+    m += F("<select class='form-control' name='cb'>");
+    for (callback_id_t i = 0; i < registered_callbacks; ++i)
+    {
+      if (callbacks[i].cond && !callbacks[i].cond())
+      {
+        continue;
+      }
+      m += F("<option value=\"");
+      m += i;
+      m += F("\">");
+      m += callbacks[i].name;
+      m += F("</option>");
+    }
+    m += F("</select>");
+    m += F("<div class='input-group-append'><button type='submit' class='btn btn-primary'>Set</button></div>");
+    m += F("</div></div></div>");
+    m += F("</form>");
+  }
+
+  m += F("<hr>");
 #if !(DISABLE_EEPROM_BUTTONS && DISABLE_RESTORE_BUTTON && DISABLE_REBOOT_BUTTON)
   // EEPROM save and restore
   m += F("<div class='row'>");
@@ -258,6 +263,14 @@ void ESPKNXIP::__handle_root()
   m += F("<div class='col-auto'>");
   m += F("<form action='" __REBOOT_PATH "' method='POST'>");
   m += F("<button type='submit' class='btn btn-danger'>Reboot</button>");
+  m += F("</form>");
+  m += F("</div>");
+#endif
+#if !DISABLE_SWUPDATE_BUTTON
+  // SW update
+  m += F("<div class='col-auto'>");
+  m += F("<form action='" __SWUPDATE_PATH "' method='POST'>");
+  m += F("<button type='submit' class='btn btn-warning'>SW update</button>");
   m += F("</form>");
   m += F("</div>");
 #endif
@@ -522,3 +535,14 @@ end:
   server->send(302);
 }
 #endif
+
+#if !DISABLE_SWUPDATE_BUTTON
+void ESPKNXIP::__handle_sw_update()
+{
+  DEBUG_PRINTLN(F("Initiating SW update!"));
+  server->sendHeader(F("Location"),F(__ROOT_PATH));
+  server->send(302);
+  // do the sw update
+}
+#endif
+
