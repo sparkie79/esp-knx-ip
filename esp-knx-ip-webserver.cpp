@@ -21,25 +21,6 @@ void ESPKNXIP::__handle_root()
   // Configuration
   m += F("<hr><h4>Configuration</h4>");
 
-  // Physical address
-  m += F("<form action='" __PHYS_PATH "' method='POST'>");
-  m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
-  m += F("<div class='input-group-prepend'><span class='input-group-text'>Physical address</span></div>");
-  m += F("<input class='form-control' type='number' name='area' min='0' max='15' value='");
-  m += physaddr.pa.area;
-  m += F("'/>");
-  m += F("<div class='input-group-insert'><span class='input-group-text'>.</span></div>");
-  m += F("<input class='form-control' type='number' name='line' min='0' max='15' value='");
-  m += physaddr.pa.line;
-  m += F("'/>");
-  m += F("<div class='input-group-insert'><span class='input-group-text'>.</span></div>");
-  m += F("<input class='form-control' type='number' name='member' min='0' max='255' value='");
-  m += physaddr.pa.member;
-  m += F("'/>");
-  m += F("<div class='input-group-append'><button type='submit' class='btn btn-primary'>Set</button></div>");
-  m += F("</div></div></div>");
-  m += F("</form>");
-
   if (registered_configs > 0)
   {
     for (config_id_t i = 0; i < registered_configs; ++i)
@@ -123,6 +104,25 @@ void ESPKNXIP::__handle_root()
       m += F("</form>");
     }
   }
+  // Physical address
+  m += F("<form action='" __PHYS_PATH "' method='POST'>");
+  m += F("<div class='row'><div class='col-auto'><div class='input-group'>");
+  m += F("<div class='input-group-prepend'><span class='input-group-text'>Physical address</span></div>");
+  m += F("<input class='form-control' type='number' name='area' min='0' max='15' value='");
+  m += physaddr.pa.area;
+  m += F("'/>");
+  m += F("<div class='input-group-insert'><span class='input-group-text'>.</span></div>");
+  m += F("<input class='form-control' type='number' name='line' min='0' max='15' value='");
+  m += physaddr.pa.line;
+  m += F("'/>");
+  m += F("<div class='input-group-insert'><span class='input-group-text'>.</span></div>");
+  m += F("<input class='form-control' type='number' name='member' min='0' max='255' value='");
+  m += physaddr.pa.member;
+  m += F("'/>");
+  m += F("<div class='input-group-append'><button type='submit' class='btn btn-primary'>Set</button></div>");
+  m += F("</div></div></div>");
+  m += F("</form>");
+
 
 
   // Feedback
