@@ -118,7 +118,9 @@ class ESPKNXIP {
     void          physical_address_set(address_t const &addr);
     address_t     physical_address_get();
 
-    // Configuration functions
+    WebServer * get_webserver() { return server; }
+
+  // Configuration functions
     config_id_t   config_register_string(String name, uint8_t len, String _default, enable_condition_t cond = nullptr);
     config_id_t   config_register_int(String name, int32_t _default, enable_condition_t cond = nullptr);
     config_id_t   config_register_bool(String name, bool _default, enable_condition_t cond = nullptr);
