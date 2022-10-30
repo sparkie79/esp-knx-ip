@@ -6,7 +6,7 @@
 
 #include "esp-knx-ip.h"
 
-ESPKNXIP::ESPKNXIP() : server(nullptr), registered_callback_assignments(0), registered_callbacks(0), registered_configs(0), registered_feedbacks(0)
+ESPKNXIP::ESPKNXIP() : registered_callback_assignments(0), registered_callbacks(0), registered_configs(0), registered_feedbacks(0)
 {
   DEBUG_PRINTLN();
   DEBUG_PRINTLN("ESPKNXIP starting up");
@@ -27,78 +27,13 @@ void ESPKNXIP::load()
   restore_from_eeprom();
 }
 
-#ifdef ESP32
-void ESPKNXIP::start(WebServer *srv)
-{
-  server = srv;
-  __start();
-}
-#else 
-void ESPKNXIP::start(ESP8266WebServer *srv)
-{
-  server = srv;
-  __start();
-}
-#endif
-
 void ESPKNXIP::start()
 {
-    #ifdef ESP32
-        server = new WebServer(80);
-    #else
-        server = new ESP8266WebServer(80);
-    #endif
   __start();
 }
 
 void ESPKNXIP::__start()
 {
-  if (server != nullptr)
-  {
-    server->on(ROOT_PREFIX, [this](){
-      __handle_root();
-    });
-    server->on(__ROOT_PATH, [this](){
-      __handle_root();
-    });
-    server->on(__REGISTER_PATH, [this](){
-      __handle_register();
-    });
-    server->on(__DELETE_PATH, [this](){
-      __handle_delete();
-    });
-    server->on(__PHYS_PATH, [this](){
-      __handle_set();
-    });
-#if !DISABLE_EEPROM_BUTTONS
-    server->on(__EEPROM_PATH, [this](){
-      __handle_eeprom();
-    });
-#endif
-    server->on(__CONFIG_PATH, [this](){
-      __handle_config();
-    });
-    server->on(__FEEDBACK_PATH, [this](){
-      __handle_feedback();
-    });
-#if !DISABLE_RESTORE_BUTTON
-    server->on(__RESTORE_PATH, [this](){
-      __handle_restore();
-    });
-#endif
-#if !DISABLE_REBOOT_BUTTON
-    server->on(__REBOOT_PATH, [this](){
-      __handle_reboot();
-    });
-#endif
-#if !DISABLE_SWUPDATE_BUTTON
-    server->on(__SWUPDATE_PATH, [this](){
-      __handle_sw_update();
-    });
-#endif
-    server->begin();
-  }
-
   #ifdef ESP32
     udp.beginMulticast(MULTICAST_IP, MULTICAST_PORT);
   #else
@@ -354,15 +289,6 @@ feedback_id_t ESPKNXIP::feedback_register_action(String name, feedback_action_fp
 void ESPKNXIP::loop()
 {
   __loop_knx();
-  if (server != nullptr)
-  {
-    __loop_webserver();
-  }
-}
-
-void ESPKNXIP::__loop_webserver()
-{
-  server->handleClient();
 }
 
 void ESPKNXIP::__loop_knx()
