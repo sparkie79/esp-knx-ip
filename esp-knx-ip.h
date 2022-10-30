@@ -98,11 +98,6 @@ class ESPKNXIP {
     ESPKNXIP();
     void load();
     void start();
-    #ifdef ESP32
-        void start(WebServer *srv);
-    #else
-        void start(ESP8266WebServer *srv);
-    #endif
     // title for web page
     void set_title(String t) { title = t; }
     void loop();
@@ -115,8 +110,6 @@ class ESPKNXIP {
 
     void          physical_address_set(address_t const &addr);
     address_t     physical_address_get();
-
-    WebServer * get_webserver() { return server; }
 
   // Configuration functions
     config_id_t   config_register_string(String name, uint8_t len, String _default, enable_condition_t cond = nullptr);
@@ -234,27 +227,6 @@ class ESPKNXIP {
     void __start();
     void __loop_knx();
 
-    // Webserver functions
-    void __loop_webserver();
-    void __handle_root();
-    void __handle_register();
-    void __handle_delete();
-    void __handle_set();
-#if !DISABLE_EEPROM_BUTTONS
-    void __handle_eeprom();
-#endif
-    void __handle_config();
-    void __handle_feedback();
-#if !DISABLE_RESTORE_BUTTON
-    void __handle_restore();
-#endif
-#if !DISABLE_REBOOT_BUTTON
-    void __handle_reboot();
-#endif
-#if !DISABLE_SWUPDATE_BUTTON
-    void __handle_sw_update();
-#endif
-
     void __config_set_flags(config_id_t id, config_flags_t flags);
 
     void __config_set_string(config_id_t id, String &val);
@@ -266,11 +238,6 @@ class ESPKNXIP {
     callback_assignment_id_t __callback_register_assignment(address_t address, callback_id_t id);
     void __callback_delete_assignment(callback_assignment_id_t id);
     
-    #ifdef ESP32
-        WebServer *server;
-    #else
-        ESP8266WebServer *server;
-    #endif
     String title;
 
     address_t physaddr;
