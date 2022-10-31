@@ -130,7 +130,8 @@ void ESPKNXIP::send_2byte_float(address_t const &receiver, knx_command_type_t ct
 	for (; v > 2047.0f; v /= 2)
 	++e;
 	
-	long m = round(v) & 0x7FF;
+	int r = round(v);
+	long m = r & 0x7FF;
 	
 	short msb = (short) (e << 3 | m >> 8);
 	if (val < 0.0f)
