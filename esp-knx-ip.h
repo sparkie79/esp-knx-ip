@@ -55,7 +55,7 @@
     #include <ESP8266WiFi.h>
 #endif
 
-#include <EEPROM.h>
+//#include <EEPROM.h>
 #include <WiFiUdp.h>
 
 
@@ -102,8 +102,8 @@ class ESPKNXIP {
     void set_title(String t) { title = t; }
     void loop();
 
-    void save_to_eeprom();
-    void restore_from_eeprom();
+    //void save_to_eeprom();
+    //void restore_from_eeprom();
 
     callback_id_t callback_register(String name, callback_fptr_t cb, void *arg = nullptr, enable_condition_t cond = nullptr);
     void          callback_assign(callback_id_t id, address_t val);
