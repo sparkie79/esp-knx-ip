@@ -23,8 +23,8 @@ ESPKNXIP::ESPKNXIP() : registered_callback_assignments(0), registered_callbacks(
 void ESPKNXIP::load()
 {
   memcpy(custom_config_default_data, custom_config_data, MAX_CONFIG_SPACE);
-  EEPROM.begin(EEPROM_SIZE);
-  restore_from_eeprom();
+  //EEPROM.begin(EEPROM_SIZE);
+  //restore_from_eeprom();
 }
 
 void ESPKNXIP::start()
@@ -41,7 +41,7 @@ void ESPKNXIP::__start()
   #endif
 }
 
-void ESPKNXIP::save_to_eeprom()
+/*void ESPKNXIP::save_to_eeprom()
 {
   uint32_t address = 0;
   uint64_t magic = EEPROM_MAGIC;
@@ -67,9 +67,9 @@ void ESPKNXIP::save_to_eeprom()
   EEPROM.commit();
   DEBUG_PRINT("Wrote to EEPROM: 0x");
   DEBUG_PRINTLN(address, HEX);
-}
+}*/
 
-void ESPKNXIP::restore_from_eeprom()
+/*void ESPKNXIP::restore_from_eeprom()
 {
   uint32_t address = 0;
   uint64_t magic = 0;
@@ -129,7 +129,7 @@ void ESPKNXIP::restore_from_eeprom()
 
   DEBUG_PRINT("Restored from EEPROM: 0x");
   DEBUG_PRINTLN(address, HEX);
-}
+}*/
 
 uint16_t ESPKNXIP::__ntohs(uint16_t n)
 {
