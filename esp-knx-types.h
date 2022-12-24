@@ -184,7 +184,7 @@ typedef struct __cemi_msg
   union
   {
     cemi_service_t service_information;
-    cemi_addi_t additional_info[];
+    cemi_addi_t additional_info[0];
   } data;
 } cemi_msg_t;
 
